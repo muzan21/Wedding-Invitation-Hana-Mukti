@@ -20,7 +20,7 @@ export const DEFAULT_INVITATION: InvitationData = {
     hijriDateDisplay: '21 Jumadil Awal 1448 ',
     monogram: 'MH',
     musicUrl: laguMuktiHana as unknown as string,
-    musicTitle: 'Mukti & Hana Wedding Song',
+    musicTitle: 'Nadin Amizah - Kekal',
     themeColor: '#be7382',
   },
   mempelai: {
