@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import React, { useState, useEffect } from 'react';
-import { Settings, Share2, Sparkles, RefreshCw } from 'lucide-react';
+import { Settings, Share2 } from 'lucide-react';
 import { InvitationData, RsvpEntry } from './types/invitation';
 import { DEFAULT_INVITATION } from './data/defaultInvitation';
 import { OpeningCover } from './components/OpeningCover';
@@ -23,7 +23,6 @@ import { EditorModal } from './components/EditorModal';
 const STORAGE_KEY = 'simanten_invitation_data_v1';
 
 export default function App() {
-  // Load initial data from localStorage if exists
   const [data, setData] = useState<InvitationData>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -40,11 +39,9 @@ export default function App() {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('sec-hero');
   const [guestName, setGuestName] = useState('Bapak/Ibu/Saudara/i');
-
-  // State untuk pengaman tombol edit rahasia
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Parse guest name and admin key from URL parameters
+  // Deteksi parameter URL (?to=... dan ?admin=muktihana123)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const to = params.get('to');
@@ -54,13 +51,11 @@ export default function App() {
       setGuestName(to.trim());
     }
 
-    // Tombol edit hanya akan aktif jika link ditambahkan ?admin=muktihana123
     if (adminKey === 'muktihana123') {
       setIsAdmin(true);
     }
   }, []);
 
-  // Save to localStorage whenever data changes
   const handleSaveData = (newData: InvitationData) => {
     setData(newData);
     try {
@@ -79,7 +74,6 @@ export default function App() {
     }
   };
 
-  // RSVP handlers
   const handleAddRsvp = (newEntry: Omit<RsvpEntry, 'id' | 'createdAt' | 'likes'>) => {
     const entry: RsvpEntry = {
       ...newEntry,
@@ -104,7 +98,6 @@ export default function App() {
     handleSaveData(updated);
   };
 
-  // Scroll to section
   const handleNavigate = (sectionId: string) => {
     setActiveSection(sectionId);
     const el = document.getElementById(sectionId);
@@ -113,7 +106,6 @@ export default function App() {
     }
   };
 
-  // IntersectionObserver to sync bottom nav with scroll
   useEffect(() => {
     if (!isOpened) return;
 
@@ -148,7 +140,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#2d2228] flex justify-center selection:bg-[#be7382]/30 selection:text-[#842a3e]">
-      {/* Top Floating App Action Bar (Always visible for easy editing & sharing) */}
+      {/* Top Floating App Action Bar */}
       <header className="fixed top-3 left-1/2 -translate-x-1/2 z-[60] w-[95%] max-w-md bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-full shadow-lg border border-[#eedfe5] flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-[#be7382] text-white flex items-center justify-center font-bold text-xs shadow-xs">
@@ -160,7 +152,7 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-1.5">
-          {/* Tombol Edit Undangan (Hanya muncul jika link memiliki parameter ?admin=muktihana123) */}
+          {/* TOMBOL EDIT HANYA MUNCUL JIKA MENGGUNAKAN ?admin=muktihana123 */}
           {isAdmin && (
             <button
               type="button"
@@ -195,7 +187,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* Main Invitation Column (Mobile view layout identical to Simanten preview frame) */}
+      {/* Main Invitation Column */}
       <div className="relative w-full max-w-lg min-h-screen bg-[#faf5f7] shadow-2xl overflow-x-hidden border-x border-[#ecd6e0]">
         {/* OPENING COVER */}
         <OpeningCover
@@ -208,9 +200,8 @@ export default function App() {
           onOpen={() => setIsOpened(true)}
         />
 
-        {/* INVITATION CONTENT (Visible once opened) */}
+        {/* INVITATION CONTENT */}
         <main className={`transition-opacity duration-700 ${isOpened ? 'opacity-100' : 'opacity-0'}`}>
-          {/* Hero Section */}
           <HeroSection
             title={data.general.title}
             groomNickname={data.general.groomNickname}
@@ -219,8 +210,6 @@ export default function App() {
             hijriDateDisplay={data.general.hijriDateDisplay}
             monogram={data.general.monogram}
           />
-
-          {/* Ayat & Sambutan Section */}
           <AyatSection
             bismillah={data.ayat.bismillah}
             salamPembuka={data.ayat.salamPembuka}
@@ -229,29 +218,19 @@ export default function App() {
             translation={data.ayat.translation}
             source={data.ayat.source}
           />
-
-          {/* Couple (Mempelai) Section */}
           <CoupleSection
             groom={data.mempelai.groom}
             bride={data.mempelai.bride}
           />
-
-          {/* Events (Akad & Resepsi) + Countdown + Interactive Map */}
           <EventsSection
             akad={data.events.akad}
             resepsi={data.events.resepsi}
           />
-
-          {/* Love Story Section */}
           <LoveStorySection stories={data.stories} />
-
-          {/* Gallery Section */}
           <GallerySection
             gallery={data.gallery}
             videoUrl={data.videoUrl}
           />
-
-          {/* Digital Gift / Amplop Section */}
           <GiftSection
             title={data.gifts.title}
             description={data.gifts.description}
@@ -259,33 +238,26 @@ export default function App() {
             qrisUrl={data.gifts.qrisUrl}
             physicalGift={data.gifts.physicalGift}
           />
-
-          {/* Interactive RSVP & Guestbook Section */}
           <RsvpGuestbookSection
             rsvps={data.rsvps}
             defaultGuestName={guestName === 'Bapak/Ibu/Saudara/i' ? '' : guestName}
             onAddRsvp={handleAddRsvp}
             onLikeRsvp={handleLikeRsvp}
           />
-
-          {/* Closing & Family Wishes Section (Watermark completely removed!) */}
           <ClosingSection
             closing={data.closing}
             monogram={data.general.monogram}
           />
         </main>
 
-        {/* FLOATING CONTROLS (Only active after invitation opened) */}
+        {/* FLOATING CONTROLS */}
         {isOpened && (
           <>
-            {/* Background Music Player */}
             <MusicPlayer
               musicUrl={data.general.musicUrl}
               musicTitle={data.general.musicTitle}
               autoPlayTrigger={isOpened}
             />
-
-            {/* Bottom Floating Navigation Dock */}
             <BottomNav
               activeSection={activeSection}
               onNavigate={handleNavigate}
