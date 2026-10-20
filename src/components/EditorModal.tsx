@@ -406,7 +406,7 @@ export const EditorModal: React.FC<EditorModalProps> = ({
       <div className="bg-white rounded-3xl w-full max-w-4xl h-[95vh] sm:h-[92vh] max-h-[820px] shadow-2xl flex flex-col sm:flex-row overflow-hidden border border-[#eedfe5] animate-fade-in">
         
         {/* Modal Top Header */}
-        <div className="w-full px-4 sm:px-6 py-3 bg-gradient-to-r from-[#faf2f5] to-white border-b border-[#ebd6df] flex items-center justify-between shrink-0">
+       <div className="px-4 md:px-6 py-3 bg-gradient-to-r from-[#faf2f5] to-white border-b border-[#ebd6df] flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#be7382] text-white flex items-center justify-center font-bold text-lg shadow-sm">
               ⚙️
@@ -459,9 +459,9 @@ export const EditorModal: React.FC<EditorModalProps> = ({
         )}
 
         {/* Modal Body: Sidebar Tabs + Content Area */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Tabs Sidebar */}
-          <div className="w-48 sm:w-56 bg-[#faf4f6] border-r border-[#ebd6df] p-3 flex flex-col gap-1 overflow-y-auto shrink-0">
+         <div className="w-full md:w-56 bg-[#faf4f6] border-b md:border-b-0 md:border-r border-[#ebd6df] p-2 md:p-3 flex md:flex-col gap-1 overflow-x-auto md:overflow-y-auto shrink-0">
             {[
               { id: 'galeri', label: 'Galeri & Video', icon: ImageIcon },
               { id: 'mempelai', label: 'Mempelai & Foto', icon: Users },
