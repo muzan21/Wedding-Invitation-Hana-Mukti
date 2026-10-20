@@ -51,13 +51,13 @@ export const ClosingSection: React.FC<ClosingSectionProps> = ({ closing, monogra
             </span>
             <span className="text-[#be7382] text-[10px]">•</span>
             <a
-              href="https://wa.me/6295336754249"
+              href="https://wa.me/62895336754249"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-[11px] font-medium text-[#8a4256] hover:text-[#542d3e] transition-colors"
             >
               <MessageCircle className="w-3 h-3 text-emerald-600 fill-emerald-600/20" />
-              <span>+6295336754249</span>
+              <span>+62895336754249</span>
             </a>
           </div>
         </div>
