@@ -1,0 +1,6 @@
+{
+  "name": "Undangan Pernikahan Digital Simanten",
+  "description": "Undangan pernikahan digital interaktif bergaya botanical Simanten dengan kustomisasi penuh, RSVP online, buku tamu interaktif, peta koordinat, dan amplop digital.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

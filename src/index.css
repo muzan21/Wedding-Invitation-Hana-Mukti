@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-serif-title {
+    font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+  }
+  .font-script {
+    font-family: 'Great Vibes', cursive;
+  }
+  .font-arabic {
+    font-family: 'Scheherazade New', 'Amiri', serif;
+    direction: rtl;
+  }
+  .font-body {
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes butterflyHover {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  25% {
+    transform: translate(6px, -10px) scale(1.05);
+  }
+  50% {
+    transform: translate(-4px, -18px) scale(0.98);
+  }
+  75% {
+    transform: translate(8px, -8px) scale(1.02);
+  }
+}
+
+@keyframes petalFall {
+  0% {
+    transform: translateY(-10%) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(110vh) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+.animate-float {
+  animation: floatGentle 5s ease-in-out infinite;
+}
+
+.animate-butterfly {
+  animation: butterflyHover 7s ease-in-out infinite;
+}
+
+.petal {
+  position: absolute;
+  pointer-events: none;
+  animation-name: petalFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(240, 230, 235, 0.4);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(190, 115, 130, 0.5);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(190, 115, 130, 0.8);
+}
