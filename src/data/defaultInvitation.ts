@@ -8,6 +8,8 @@ import gal5 from '../assets/galeri5.jpg';
 import gal6 from '../assets/galeri6.jpg';
 import qrisImg from '../assets/qris.jpg'; 
 import laguMuktiHana from '../assets/laguMuktiHana.mp3';
+import fotoMukti from '../assets/Foto-Mukti.jpg';
+import fotoHana from '../assets/Foto-Hana.jpg';
 
 export const DEFAULT_INVITATION: InvitationData = {
   general: {
@@ -17,7 +19,7 @@ export const DEFAULT_INVITATION: InvitationData = {
     eventDateDisplay: 'Minggu, 01 November 2026',
     hijriDateDisplay: '21 Jumadil Awal 1448 ',
     monogram: 'MH',
-    musicUrl: laguMuktiHana,
+    musicUrl: laguMuktiHana as unknown as string,
     musicTitle: 'Mukti & Hana Wedding Song',
     themeColor: '#be7382',
   },
@@ -28,7 +30,7 @@ export const DEFAULT_INVITATION: InvitationData = {
       order: 'Putra Pertama',
       father: 'Bapak K.H Khoerudin',
       mother: 'Ibu Siti Jubaedah',
-      photo: './src/assets/Foto-Mukti.jpg',
+      photo: fotoMukti as unknown as string,
       instagram: 'muktisalim',
     },
     bride: {
@@ -37,7 +39,7 @@ export const DEFAULT_INVITATION: InvitationData = {
       order: 'Putri Pertama',
       father: 'Bapak Cecep Setiadi',
       mother: 'Ibu Nurhayati',
-      photo: './src/assets/Foto-Hana.jpg',
+      photo: fotoHana as unknown as string,
       instagram: 'hanaaarahmaa',
     },
   },
@@ -58,8 +60,8 @@ export const DEFAULT_INVITATION: InvitationData = {
       venue: 'Gedung Gor Harum',
       address: 'GPQ4+WCQ, Jl. Mad Nur, Jampang, Kec. Ciseeng, Kabupaten Bogor, Jawa Barat 16120',
       coordinates: {
-        lat: -6.4601512,
-        lng: 106.706113,
+        lat: -6.438,
+        lng: 106.748,
       },
       gmapsUrl: 'https://maps.app.goo.gl/RzMPzbsyGaZmEW178',
     },
@@ -71,8 +73,8 @@ export const DEFAULT_INVITATION: InvitationData = {
       venue: 'Gedung Gor Harum',
       address: 'GPQ4+WCQ, Jl. Mad Nur, Jampang, Kec. Ciseeng, Kabupaten Bogor, Jawa Barat 16120',
       coordinates: {
-        lat: -6.4601512,
-        lng: 106.706113,
+        lat: -6.438,
+        lng: 106.748,
       },
       gmapsUrl: 'https://maps.app.goo.gl/RzMPzbsyGaZmEW178',
       dressCode: 'Batik / Pakaian Formal',
@@ -102,32 +104,32 @@ export const DEFAULT_INVITATION: InvitationData = {
   gallery: [
     {
       id: 'gal-1',
-      url: gal1,
+      url: gal1 as unknown as string,
       caption: 'Momen Bahagia 1',
     },
     {
       id: 'gal-2',
-      url: gal2,
+      url: gal2 as unknown as string,
       caption: 'Momen Bahagia 2',
     },
     {
       id: 'gal-3',
-      url: gal3,
+      url: gal3 as unknown as string,
       caption: 'Momen Bahagia 3',
     },
     {
       id: 'gal-4',
-      url: gal4,
+      url: gal4 as unknown as string,
       caption: 'Momen Bahagia 4',
     },
     {
       id: 'gal-5',
-      url: gal5,
+      url: gal5 as unknown as string,
       caption: 'Momen Bahagia 5',
     },
     {
       id: 'gal-6',
-      url: gal6,
+      url: gal6 as unknown as string,
       caption: 'Momen Bahagia 6',
     },
   ],
@@ -151,7 +153,7 @@ export const DEFAULT_INVITATION: InvitationData = {
         bankLogo: 'https://i.simanten.com/media/images/lib/sea.png',
       },
     ],
-    qrisUrl: qrisImg, 
+    qrisUrl: qrisImg as unknown as string, 
     physicalGift: {
       recipientName: 'Hana Rahmawati',
       phone: '',
