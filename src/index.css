@@ -101,3 +101,24 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(190, 115, 130, 0.8);
 }
+/* Perbaikan Tampilan agar Sempurna dan Rapi di HP */
+@media (max-width: 640px) {
+  body {
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Memastikan pembungkus utama undangan pas di layar HP */
+  .max-w-lg {
+    max-width: 100% !important;
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Merapikan posisi tombol menu bawah agar tidak terpotong */
+  nav.fixed {
+    width: 92% !important;
+    bottom: 12px !important;
+  }
+}
