@@ -2,7 +2,6 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-
 import React, { useState, useEffect } from 'react';
 import { Settings, Share2, Sparkles, RefreshCw } from 'lucide-react';
 import { InvitationData, RsvpEntry } from './types/invitation';
@@ -42,12 +41,22 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('sec-hero');
   const [guestName, setGuestName] = useState('Bapak/Ibu/Saudara/i');
 
-  // Parse guest name from URL parameter ?to=Nama+Tamu
+  // State untuk pengaman tombol edit rahasia
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Parse guest name and admin key from URL parameters
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const to = params.get('to');
+    const adminKey = params.get('admin');
+
     if (to && to.trim()) {
       setGuestName(to.trim());
+    }
+
+    // Tombol edit hanya akan aktif jika link ditambahkan ?admin=muktihana123
+    if (adminKey === 'muktihana123') {
+      setIsAdmin(true);
     }
   }, []);
 
@@ -151,15 +160,18 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setIsEditorOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#be7382] hover:bg-[#a65364] text-white text-[11px] font-semibold shadow-xs active:scale-95 transition-all cursor-pointer"
-            title="Edit teks, foto, acara, dan kado"
-          >
-            <Settings className="w-3.5 h-3.5" />
-            <span>Edit Undangan</span>
-          </button>
+          {/* Tombol Edit Undangan (Hanya muncul jika link memiliki parameter ?admin=muktihana123) */}
+          {isAdmin && (
+            <button
+              type="button"
+              onClick={() => setIsEditorOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#be7382] hover:bg-[#a65364] text-white text-[11px] font-semibold shadow-xs active:scale-95 transition-all cursor-pointer"
+              title="Edit teks, foto, acara, dan kado"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Edit Undangan</span>
+            </button>
+          )}
 
           <button
             type="button"
