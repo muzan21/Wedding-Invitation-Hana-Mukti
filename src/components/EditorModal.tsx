@@ -401,11 +401,12 @@ export const EditorModal: React.FC<EditorModalProps> = ({
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(waText)}`, '_blank');
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
-      <div className="bg-white rounded-3xl w-full max-w-4xl h-[92vh] max-h-[820px] shadow-2xl flex flex-col overflow-hidden border border-[#eedfe5] animate-fade-in">
+ return (
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-5">
+      <div className="bg-white rounded-3xl w-full max-w-4xl h-[95vh] sm:h-[92vh] max-h-[820px] shadow-2xl flex flex-col sm:flex-row overflow-hidden border border-[#eedfe5] animate-fade-in">
+        
         {/* Modal Top Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-[#faf2f5] to-white border-b border-[#ebd6df] flex items-center justify-between">
+        <div className="w-full px-4 sm:px-6 py-3 bg-gradient-to-r from-[#faf2f5] to-white border-b border-[#ebd6df] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#be7382] text-white flex items-center justify-center font-bold text-lg shadow-sm">
               ⚙️
