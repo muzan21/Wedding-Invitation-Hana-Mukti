@@ -56,7 +56,7 @@ export const DEFAULT_INVITATION: InvitationData = {
       title: 'Akad Nikah',
       date: 'Minggu, 01 November 2026',
       hijri: '21 Jumadil Awal 1448',
-      time: '09:00 WIB',
+      time: '10:00 WIB',
       venue: 'Gedung Gor Harum',
       address: 'GPQ4+WCQ, Jl. Mad Nur, Jampang, Kec. Ciseeng, Kabupaten Bogor, Jawa Barat 16120',
       coordinates: {
