@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Send, CheckCircle2, XCircle, HelpCircle, Heart, Search, Filter, MessageSquareHeart } from 'lucide-react';
+import { Send, CheckCircle2, XCircle, HelpCircle, Heart, Search, MessageSquareHeart } from 'lucide-react';
 import { RsvpEntry } from '../types/invitation';
 
 interface RsvpGuestbookSectionProps {
@@ -29,6 +29,7 @@ export const RsvpGuestbookSection: React.FC<RsvpGuestbookSectionProps> = ({
     e.preventDefault();
     if (!name.trim() || !message.trim()) return;
 
+    // 1. Kirim ke fungsi utama dari props
     onAddRsvp({
       name: name.trim(),
       attendance,
@@ -36,6 +37,25 @@ export const RsvpGuestbookSection: React.FC<RsvpGuestbookSectionProps> = ({
       relation,
       message: message.trim(),
     });
+
+    // 2. BACKUP LOCALSTORAGE: Memastikan data langsung tersimpan di browser HP tamu 
+    // agar langsung muncul di list bawah tanpa hilang saat direfresh.
+    try {
+      const newEntry: RsvpEntry = {
+        id: 'local-' + Date.now(),
+        name: name.trim(),
+        attendance,
+        guestCount: attendance === 'hadir' ? guestCount : 0,
+        relation,
+        message: message.trim(),
+        createdAt: 'Baru saja',
+        likes: 0,
+      };
+      const existingLocal = JSON.parse(localStorage.getItem('saved_local_rsvps') || '[]');
+      localStorage.setItem('saved_local_rsvps', JSON.stringify([newEntry, ...existingLocal]));
+    } catch {
+      // ignore
+    }
 
     setMessage('');
     setSubmitted(true);
@@ -55,7 +75,24 @@ export const RsvpGuestbookSection: React.FC<RsvpGuestbookSectionProps> = ({
     setTimeout(() => setSubmitted(false), 5000);
   };
 
-  const filteredRsvps = rsvps
+  // Menggabungkan data dari props utama dan backup lokal agar langsung tampil
+  const localSavedRsvps: RsvpEntry[] = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('saved_local_rsvps') || '[]');
+    } catch {
+      return [];
+    }
+  })();
+
+  // Gabungkan dan hilangkan duplikat berdasarkan nama & pesan
+  const combinedRsvps = [...rsvps];
+  localSavedRsvps.forEach((localItem) => {
+    if (!combinedRsvps.some((r) => r.name === localItem.name && r.message === localItem.message)) {
+      combinedRsvps.unshift(localItem);
+    }
+  });
+
+  const filteredRsvps = combinedRsvps
     .filter((item) => {
       if (filterType === 'hadir') return item.attendance === 'hadir';
       if (filterType === 'tidak') return item.attendance === 'tidak';
@@ -69,7 +106,7 @@ export const RsvpGuestbookSection: React.FC<RsvpGuestbookSectionProps> = ({
       );
     });
 
-  const totalHadirCount = rsvps
+  const totalHadirCount = combinedRsvps
     .filter((r) => r.attendance === 'hadir')
     .reduce((sum, curr) => sum + (curr.guestCount || 1), 0);
 
@@ -244,7 +281,7 @@ export const RsvpGuestbookSection: React.FC<RsvpGuestbookSectionProps> = ({
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <div>
               <h3 className="font-serif-title text-lg font-bold text-[#542d3e]">
-                Buku Tamu Digital ({rsvps.length})
+                Buku Tamu Digital ({combinedRsvps.length})
               </h3>
               <p className="text-[11px] text-[#7d5f6f]">
                 {totalHadirCount} tamu telah mengonfirmasi hadir
