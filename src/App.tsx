@@ -19,6 +19,7 @@ import { ClosingSection } from './components/ClosingSection';
 import { MusicPlayer } from './components/MusicPlayer';
 import { BottomNav } from './components/BottomNav';
 import { EditorModal } from './components/EditorModal';
+import { supabase } from './supabaseClient';
 
 const STORAGE_KEY = 'simanten_invitation_data_v1';
 
@@ -40,6 +41,77 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('sec-hero');
   const [guestName, setGuestName] = useState('Bapak/Ibu/Saudara/i');
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // Fungsi untuk mengambil data rsvps dari Supabase
+  const fetchRsvpsFromSupabase = async () => {
+    try {
+      const { data: remoteRsvps, error } = await supabase
+        .from('rsvps')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching rsvps from Supabase:', error);
+        return;
+      }
+
+      if (remoteRsvps) {
+        // Petakan format kolom database ke tipe data InvitationData
+        const formattedRsvps: RsvpEntry[] = remoteRsvps.map((item: any) => ({
+          id: item.id,
+          name: item.name,
+          attendance: item.attendance,
+          guestCount: item.guest_count,
+          relation: item.relation,
+          message: item.message,
+          likes: item.likes || 0,
+          createdAt: formatTimeAgo(item.created_at),
+        }));
+
+        setData((prev) => ({
+          ...prev,
+          rsvps: formattedRsvps,
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to connect to Supabase:', err);
+    }
+  };
+
+  // Helper untuk menampilkan waktu relatif
+  const formatTimeAgo = (dateString: string) => {
+    if (!dateString) return 'Baru saja';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMins = Math.floor((now.getTime() - date.getTime()) / 60000);
+    if (diffMins < 1) return 'Baru saja';
+    if (diffMins < 60) return `${diffMins} mnt lalu`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours} jam lalu`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} hari lalu`;
+  };
+
+  // Ambil data RSVP saat aplikasi pertama kali dibuka dan pasang Realtime listener
+  useEffect(() => {
+    fetchRsvpsFromSupabase();
+
+    // Realtime subscription agar otomatis update jika ada data baru masuk dari perangkat lain
+    const channel = supabase
+      .channel('public:rsvps')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'rsvps' },
+        () => {
+          fetchRsvpsFromSupabase();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   // Deteksi parameter URL (?to=... dan ?admin=muktihana123)
   useEffect(() => {
@@ -74,28 +146,59 @@ export default function App() {
     }
   };
 
-  const handleAddRsvp = (newEntry: Omit<RsvpEntry, 'id' | 'createdAt' | 'likes'>) => {
-    const entry: RsvpEntry = {
-      ...newEntry,
-      id: `rsvp-${Date.now()}`,
-      createdAt: 'Baru saja',
-      likes: 0,
-    };
-    const updated = {
-      ...data,
-      rsvps: [entry, ...data.rsvps],
-    };
-    handleSaveData(updated);
+  // Fungsi Kirim RSVP langsung ke Supabase Database
+  const handleAddRsvp = async (newEntry: Omit<RsvpEntry, 'id' | 'createdAt' | 'likes'>) => {
+    try {
+      const { error } = await supabase.from('rsvps').insert([
+        {
+          name: newEntry.name,
+          attendance: newEntry.attendance,
+          guest_count: newEntry.guestCount,
+          relation: newEntry.relation,
+          message: newEntry.message,
+          likes: 0,
+        },
+      ]);
+
+      if (error) {
+        console.error('Error inserting RSVP to Supabase:', error);
+        alert('Gagal mengirim ucapan ke database. Coba sesaat lagi.');
+        return;
+      }
+
+      // Ambil ulang data terbaru setelah berhasil insert
+      fetchRsvpsFromSupabase();
+    } catch (err) {
+      console.error('Exception during RSVP insert:', err);
+    }
   };
 
-  const handleLikeRsvp = (id: string) => {
-    const updated = {
-      ...data,
-      rsvps: data.rsvps.map((r) =>
-        r.id === id ? { ...r, likes: (r.likes || 0) + 1 } : r
-      ),
-    };
-    handleSaveData(updated);
+  // Fungsi Like Ucapan di Supabase
+  const handleLikeRsvp = async (id: string) => {
+    try {
+      const target = data.rsvps.find((r) => r.id === id);
+      if (!target) return;
+
+      const newLikes = (target.likes || 0) + 1;
+
+      const { error } = await supabase
+        .from('rsvps')
+        .update({ likes: newLikes })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error updating likes:', error);
+        return;
+      }
+
+      // Update state lokal secara instan
+      setData((prev) => ({
+        ...prev,
+        rsvps: prev.rsvps.map((r) => (r.id === id ? { ...r, likes: newLikes } : r)),
+      }));
+    } catch (err) {
+      console.error('Exception during like update:', err);
+    }
   };
 
   const handleNavigate = (sectionId: string) => {
